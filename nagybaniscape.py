@@ -46,9 +46,9 @@ df = pd.read_csv("nagybani.csv")
 #SEND EMAIL IF DATA CHANGES 
 if df["Maximum_ar"].iloc[-1] < max_a :
     
-    sender = "szelesaron40@gmail.com"
+    sender = "nagybani.ar@gmail.com"
     recevier = "csanakialma@gmail.com"
-    password = "Bodos1999"
+    password = "Abcd1234."
     
     message = "Uj Maximum ar " + str(max_a)
     
@@ -60,9 +60,9 @@ if df["Maximum_ar"].iloc[-1] < max_a :
     print("Sent")
 
 if df["Minimum_ar"].iloc[-1] > min_a:
-    sender = "szelesaron40@gmail.com"
+    sender = "nagybani.ar@gmail.com"
     recevier = "csanakialma@gmail.com"
-    password = "Bodos1999"
+    password = "Abcd1234."
     
     message = "Uj minimum ar " +str(min_a)
     
