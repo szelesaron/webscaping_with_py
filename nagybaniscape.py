@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup as soup
 import os
 import pandas as pd
 import datetime
+import smtplib
 
 os.chdir(r"C:\Users\Áron\Desktop\nagybani")
 
@@ -25,7 +26,7 @@ print(termék)
 minimum = containers[67].findAll("td")[3].text
 maximum = containers[67].findAll("td")[4].text
 
-
+#Get new daily data and format it
 min_a = int(minimum[:4])
 max_a = int(maximum[:4])
 current_time = datetime.datetime.now()
@@ -39,6 +40,40 @@ def empty_df():
 #read is csv file
 df = pd.read_csv("nagybani.csv")
 
+
+    
+ 
+#SEND EMAIL IF DATA CHANGES 
+if df["Maximum_ar"].iloc[-1] < max_a :
+    
+    sender = "szelesaron40@gmail.com"
+    recevier = "csanakialma@gmail.com"
+    password = "Bodos1999"
+    
+    message = "Uj Maximum ar " + str(max_a)
+    
+    server = smtplib.SMTP("smtp.gmail.com", 587)
+    server.starttls()
+    server.login(sender, password)
+    print("Logged in")
+    server.sendmail(sender, recevier, message)
+    print("Sent")
+
+if df["Minimum_ar"].iloc[-1] > min_a:
+    sender = "szelesaron40@gmail.com"
+    recevier = "csanakialma@gmail.com"
+    password = "Bodos1999"
+    
+    message = "Uj minimum ar " +str(min_a)
+    
+    server = smtplib.SMTP("smtp.gmail.com", 587)
+    server.starttls()
+    server.login(sender, password)
+    print("Logged in")
+    server.sendmail(sender, recevier, message)
+    print("Sent")
+
+
 #daily data
 new_row = {'Datum':date, 'Minimum_ar':min_a, 'Maximum_ar':max_a}
 
@@ -46,8 +81,8 @@ new_row = {'Datum':date, 'Minimum_ar':min_a, 'Maximum_ar':max_a}
 if date not in df["Datum"].values and termék == "Alma":
     df = df.append(new_row, ignore_index = True)
 
+
+
+#save csv
 print("Done!")
 df.to_csv("nagybani.csv", index = False)
-
-
-
