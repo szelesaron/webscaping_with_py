@@ -20,11 +20,19 @@ page_soup = soup(page_html, "html.parser")
 containers = page_soup.findAll("tr")
 
 
-#Checking is its still apples
-termék = containers[67].findAll("td")[0].text
+#Checking is its still apple
+def get_apple_index():
+    n = 1
+    while True:
+        if (containers[n].findAll("td")[0].text == "Alma"):
+            return n
+        n+=1
+
+        
+termék = containers[get_apple_index()].findAll("td")[0].text
 print(termék)
-minimum = containers[67].findAll("td")[3].text
-maximum = containers[67].findAll("td")[4].text
+minimum = containers[get_apple_index()].findAll("td")[3].text
+maximum = containers[get_apple_index()].findAll("td")[4].text
 
 #Get new daily data and format it
 min_a = int(minimum[:4])
@@ -44,13 +52,21 @@ df = pd.read_csv("nagybani.csv")
     
  
 #SEND EMAIL IF DATA CHANGES 
-if df["Maximum_ar"].iloc[-1] < max_a :
+if df["Maximum_ar"].iloc[-1] != max_a :
     
     sender = "nagybani.ar@gmail.com"
     recevier = "csanakialma@gmail.com"
     password = "Abcd1234."
     
-    message = "Uj Maximum ar " + str(max_a)
+    diff = max_a - df["Maximum_ar"].iloc[-1]
+    if diff > 0:
+        text = "Uj maximum ar " + str(max_a) + " " + f"(+{diff})" + "Ft" 
+    else:
+        text = "Uj maximum ar " + str(max_a) + " " + f"({diff})" + "Ft" 
+    
+    text = "Uj Maximum ar " + str(max_a)+" " + f"({diff})" + " Ft" 
+    message = 'Subject: {}\n\n{}'.format("Ar valtozas", text)
+
     
     server = smtplib.SMTP("smtp.gmail.com", 587)
     server.starttls()
@@ -59,12 +75,18 @@ if df["Maximum_ar"].iloc[-1] < max_a :
     server.sendmail(sender, recevier, message)
     print("Sent")
 
-if df["Minimum_ar"].iloc[-1] > min_a:
+if df["Minimum_ar"].iloc[-1] != min_a:
     sender = "nagybani.ar@gmail.com"
     recevier = "csanakialma@gmail.com"
     password = "Abcd1234."
     
-    message = "Uj minimum ar " +str(min_a)
+    diff = min_a  - df["Minimum_ar"].iloc[-1]
+    if diff > 0:
+        text = "Uj minimum ar " + str(min_a) + " " + f"(+{diff})" + "Ft" 
+    else:
+        text = "Uj minimum ar " + str(min_a) + " " + f"({diff})" + "Ft" 
+        
+    message = 'Subject: {}\n\n{}'.format("Ar valtozas", text)
     
     server = smtplib.SMTP("smtp.gmail.com", 587)
     server.starttls()
@@ -86,3 +108,9 @@ if date not in df["Datum"].values and termék == "Alma":
 #save csv
 print("Done!")
 df.to_csv("nagybani.csv", index = False)
+
+
+
+
+
+
