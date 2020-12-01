@@ -45,6 +45,11 @@ def empty_df():
     df = pd.DataFrame (columns = ["Datum","Minimum_ar", "Maximum_ar"])
     return df
 
+def delete_last_n_row(n):
+    df.drop(df.tail(n).index,inplace=True) 
+    df.to_csv("nagybani.csv", index = False)
+
+
 #read is csv file
 df = pd.read_csv("nagybani.csv")
 
@@ -60,11 +65,11 @@ if df["Maximum_ar"].iloc[-1] != max_a :
     
     diff = max_a - df["Maximum_ar"].iloc[-1]
     if diff > 0:
-        text = "Uj maximum ar " + str(max_a) + " " + f"(+{diff})" + "Ft" 
+        text = "Uj maximum ar " + str(max_a) + " "  +f"(+{diff})" + "Ft" 
     else:
         text = "Uj maximum ar " + str(max_a) + " " + f"({diff})" + "Ft" 
     
-    text = "Uj Maximum ar " + str(max_a)+" " + f"({diff})" + " Ft" 
+    
     message = 'Subject: {}\n\n{}'.format("Ar valtozas", text)
 
     
@@ -108,9 +113,5 @@ if date not in df["Datum"].values and termék == "Alma":
 #save csv
 print("Done!")
 df.to_csv("nagybani.csv", index = False)
-
-
-
-
 
 
