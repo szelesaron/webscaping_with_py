@@ -4,6 +4,8 @@ import os
 import pandas as pd
 import datetime
 import smtplib
+import ssl
+ssl._create_default_https_context = ssl._create_unverified_context
 
 os.chdir(r"C:\Users\Áron\Desktop\nagybani")
 
